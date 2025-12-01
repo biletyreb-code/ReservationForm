@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rezerwacja - Świąteczny Pociąg</title>
+
+    <style>
+        /* --- Zmienne CSS dla ułatwienia zmiany kolorów (Świąteczny Minimalizm) --- */
+        :root {
+            --kolor-tla: #f7f7f5; /* Kremowa, lekko ciepła biel */
+            --kolor-akcentu: #8b0000; /* Ciemna, elegancka czerwień burgund */
+            --kolor-glowny: #004d40; /* Ciemna, butelkowa zieleń (świąteczna) */
+            --kolor-tekstu: #333333; /* Ciemny, czytelny tekst */
+            --cien-delikatny: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Globalne Ustawienia --- */
+        body {
+            font-family: 'Georgia', serif; /* Klasyczna, elegancka czcionka */
+            background-color: var(--kolor-tla);
+            color: var(--kolor-tekstu);
+            margin: 0;
+            padding: 24px;
+            line-height: 1.6;
+        }
+
+        /* --- Nagłówek i Tytuł --- */
+        h2 {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            color: var(--kolor-glowny);
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 1.5px;
+            font-size: 1.8em;
+        }
+
+        /* --- Kontener Główny (Formularz) --- */
+        form {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--cien-delikatny);
+            border-top: 5px solid var(--kolor-akcentu); /* Świąteczny akcent na górze */
+        }
+
+        /* --- Pola Formularza --- */
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 15px;
+            color: var(--kolor-glowny);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--kolor-akcentu);
+            outline: none;
+        }
+
+        /* Grupa RODO i Checkbox */
+        .rodo-group {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dashed #e0e0e0;
+        }
+        
+        .rodo-checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 15px;
+        }
+
+        .rodo-checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-top: 4px;
+            margin-right: 10px;
+        }
+        
+        .rodo-text {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Informacja o Administratorze (RODO) */
+        .rodo-admin-info {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .rodo-admin-info strong {
+            color: var(--kolor-glowny);
+        }
+
+        /* --- Przycisk Rezerwacji --- */
+        button {
+            margin-top: 30px;
+            width: 100%;
+            padding: 14px 20px;
+            background-color: var(--kolor-akcentu);
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: background-color 0.3s, opacity 0.3s;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #a00000;
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .success {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--kolor-glowny); /* Sukces w kolorze zielonym */
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Rezerwacja Przejazdu Świątecznym Pociągiem</h2>
+
+    <form id="submitForm">
+        <label for="date">Data Przejazdu</label>
+        <select id="date" name="date" required onchange="updateStops(); checkFormValidity();">
+            <option value="" disabled selected>Wybierz datę</option>
+            <option value="06.12.2025">06.12.2025</option>
+            <option value="07.12.2025">07.12.2025</option>
+        </select>
+
+        <label for="firstName">Imię</label>
+        <input type="text" id="firstName" name="firstName" required oninput="checkFormValidity();" />
+
+        <label for="lastName">Nazwisko</label>
+        <input type="text" id="lastName" name="lastName" required oninput="checkFormValidity();" />
+
+        <label for="seats">Ilość miejsc</label>
+        <input type="number" id="seats" name="seats" min="1" max="8" required oninput="checkFormValidity();" />
+
+        <label for="stop1">Stacja początkowa</label>
+        <select id="stop1" name="stop1" required disabled onchange="checkFormValidity();">
+            <option value="" disabled selected>Wybierz datę, aby zobaczyć przystanki</option>
+        </select>
+
+        <label for="stop2">Stacja końcowa</label>
+        <select id="stop2" name="stop2" required disabled onchange="checkFormValidity();">
+            <option value="" disabled selected>Wybierz datę, aby zobaczyć przystanki</option>
+        </select>
+
+        <label for="phone">Telefon</label>
+        <input type="tel" id="phone" name="phone" required oninput="checkFormValidity();" />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required oninput="checkFormValidity();" />
+
+        <label for="isReturn">Powrót</label>
+        <select id="isReturn" name="isReturn" required onchange="checkFormValidity();">
+            <option value="Nie">Nie</option>
+            <option value="Tak">Tak</option>
+        </select>
+        
+        <div class="rodo-group">
+            <div class="rodo-checkbox-container">
+                <input type="checkbox" id="rodoAccept" required onclick="checkFormValidity();">
+                <label for="rodoAccept" class="rodo-text">
+                    Oświadczam, że zapoznałem/am się i **zgadzam na przetwarzanie** moich danych osobowych w celu realizacji usługi przewozu oraz kontaktu, zgodnie z RODO.
+                </label>
+            </div>
+            
+            <p class="rodo-admin-info">
+                Administratorem danych jest: <strong>SKPL Cargo Sp. z o.o.</strong><br>
+                Adres: Zbiersk Cukrownia 54, 62-830 Zbiersk, NIP: 9680951169.
+            </p>
+        </div>
+
+
+        <button type="submit" disabled>Wyślij Rezerwację</button>
+
+        <p class="success" id="successMsg" style="display:none;">Dane wysłane pomyślnie! Dziękujemy za rezerwację.</p>
+    </form>
+
+    <script>
+        // ZMIEŃ NA SWÓJ URL DEPLOYMENTU
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwcPoLhkBTHOP7u-hnKLfL7SJX_BGsbj1-bD1MK6VJzyRs36g8-j8zrfhSqzuiboAdM/exec";
+
+        // Dane przystanków (zgodne z Twoimi)
+        const stopsData = {
+            "06.12.2025": [
+                "Besko", "Biecz", "Długie", "Gliniczek", "Gorlice", "Gorlice Glinik", "Gorlice Zagórzany",
+                "Jasło", "Jasło Niegłowice", "Jedlicze", "Jedlicze Męcinka", "Krosno", "Krosno Miasto",
+                "Krosno Polanka", "Krosno Turaszówka", "Libusza", "Milcza", "Nowosielce", "Nowy Zagórz",
+                "Przysieki", "Sanok", "Sanok Dąbrówka", "Sanok Miasto", "Siepietnica", "Skołyszyn",
+                "Targowiska", "Tarnowiec", "Widacz", "Wróblik Szlachecki", "Zarszyn", "Zagórz"
+            ],
+            "07.12.2025": [
+                "Besko", "Czaszyn", "Humenne", "Jasło", "Jedlicze", "Komańcza", "Komańcza Letnisko",
+                "Krosno", "Krosno Miasto", "Łupków", "Medzilaborce", "Medzilaborce Mesto",
+                "Mokre Małopolskie", "Morochów", "Nowy Łupków", "Nowy Zagórz", "Rzepedź", "Sanok",
+                "Stakcin", "Szczawne Kulaszne", "Targowiska", "Tarnawa Dolna", "Wróblik Szlachecki",
+                "Wysoczany", "Zagórz", "Zarszyn"
+            ]
+        };
+
+        /**
+         * Funkcja wypełniająca listy przystanków na podstawie wybranej daty.
+         */
+        function updateStops() {
+            const dateSelect = document.getElementById("date");
+            const stop1Select = document.getElementById("stop1");
+            const stop2Select = document.getElementById("stop2");
+            const selectedDate = dateSelect.value;
+            const stops = stopsData[selectedDate] || [];
+
+            // Wyczyść i wyłącz pola przystanków
+            stop1Select.innerHTML = '<option value="" disabled selected>Wybierz przystanek</option>';
+            stop2Select.innerHTML = '<option value="" disabled selected>Wybierz przystanek</option>';
+            stop1Select.disabled = true;
+            stop2Select.disabled = true;
+
+            if (stops.length > 0) {
+                // Wypełnij pola przystanków nowymi opcjami
+                stops.forEach(stop => {
+                    const option1 = new Option(stop, stop);
+                    const option2 = new Option(stop, stop);
+                    stop1Select.add(option1);
+                    stop2Select.add(option2);
+                });
+
+                // Włącz pola przystanków
+                stop1Select.disabled = false;
+                stop2Select.disabled = false;
+            } else if (selectedDate) {
+                // Komunikat, gdy lista jest pusta
+                stop1Select.innerHTML = '<option value="" disabled selected>Brak przystanków dla tej daty</option>';
+                stop2Select.innerHTML = '<option value="" disabled selected>Brak przystanków dla tej daty</option>';
+            }
+            // Sprawdź ważność formularza po aktualizacji przystanków
+            checkFormValidity();
+        }
+
+        /**
+         * Funkcja sprawdzająca ważność całego formularza
+         * i aktywująca/dezaktywująca przycisk "Wyślij Rezerwację".
+         */
+        function checkFormValidity() {
+            const form = document.getElementById("submitForm");
+            const rodoChecked = document.getElementById("rodoAccept").checked;
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            // Weryfikuje ważność formularza HTML5 (w tym pola required)
+            // Oraz weryfikuje czy RODO jest zaznaczone
+            const isFormValid = form.checkValidity() && rodoChecked;
+
+            // Ustawia atrybut disabled przycisku
+            submitButton.disabled = !isFormValid;
+        }
+
+        // Dodanie nasłuchiwania zdarzenia 'submit'
+        document.getElementById("submitForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            // Dodatkowe sprawdzenie RODO na wypadek, gdyby JS w checkFormValidity nie zadziałał
+            if (!document.getElementById("rodoAccept").checked) {
+                alert("Proszę zaakceptować warunki RODO, aby kontynuować rezerwację.");
+                return;
+            }
+
+            const formData = new FormData(this);
+            const params = new URLSearchParams(formData).toString();
+
+            // Wyłącz przycisk i zmień tekst podczas wysyłania
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.textContent = "Wysyłanie...";
+            submitButton.disabled = true;
+
+            // Ukryj komunikat o sukcesie
+            document.getElementById("successMsg").style.display = "none";
+
+            fetch(scriptURL + "?" + params, { method: "GET" })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('Odpowiedź serwera nie jest OK');
+                })
+                .then(() => {
+                    document.getElementById("successMsg").style.display = "block";
+                    this.reset(); // Resetuje formularz
+                    updateStops(); // Wyczyść dynamiczne listy
+                    document.getElementById("rodoAccept").checked = false; // Resetuj checkbox RODO
+                })
+                .catch(err => {
+                    alert("Błąd podczas wysyłania danych: " + err);
+                })
+                .finally(() => {
+                    // Przywróć przycisk i sprawdź stan formularza
+                    submitButton.textContent = "Wyślij Rezerwację";
+                    checkFormValidity(); // Przycisk pozostanie wyłączony, bo pola są puste po resetowaniu
+                });
+        });
+        
+        // --- Inicjalizacja ---
+        // 1. Uruchomienie przy starcie, aby zainicjować pola przystanków
+        updateStops();
+        // 2. Dodanie globalnych nasłuchiwań na zmiany, aby aktualizować przycisk
+        const formElements = document.querySelectorAll('#submitForm input, #submitForm select');
+        formElements.forEach(element => {
+            if (element.id !== 'rodoAccept' && element.tagName !== 'BUTTON') {
+                element.addEventListener('change', checkFormValidity);
+                element.addEventListener('input', checkFormValidity);
+            }
+        });
+        // 3. Sprawdzenie formularza na starcie (przycisk będzie disabled)
+        checkFormValidity();
+    </script>
+</body>
+</html>
