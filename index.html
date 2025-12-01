@@ -2,26 +2,31 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
     <title>Rezerwacja - Świąteczny Pociąg</title>
 
     <style>
-        /* --- Zmienne CSS dla ułatwienia zmiany kolorów (Świąteczny Minimalizm) --- */
+        /* --- Zmienne CSS --- */
         :root {
-            --kolor-tla: #f7f7f5; /* Kremowa, lekko ciepła biel */
-            --kolor-akcentu: #8b0000; /* Ciemna, elegancka czerwień burgund */
-            --kolor-glowny: #004d40; /* Ciemna, butelkowa zieleń (świąteczna) */
-            --kolor-tekstu: #333333; /* Ciemny, czytelny tekst */
+            --kolor-tla: #f7f7f5;
+            --kolor-akcentu: #8b0000;
+            --kolor-glowny: #004d40;
+            --kolor-tekstu: #333333;
             --cien-delikatny: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- Globalne Ustawienia --- */
+        /* --- Globalne Ustawienia i Reset --- */
+        /* Użycie box-sizing: border-box jest kluczowe dla responsywności */
+        * {
+            box-sizing: border-box; 
+        }
         body {
-            font-family: 'Georgia', serif; /* Klasyczna, elegancka czcionka */
+            font-family: 'Georgia', serif;
             background-color: var(--kolor-tla);
             color: var(--kolor-tekstu);
             margin: 0;
-            padding: 24px;
+            /* Na małych ekranach zredukuj padding, aby formularz zajął całą szerokość */
+            padding: 0; 
             line-height: 1.6;
         }
 
@@ -30,20 +35,25 @@
             font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
             color: var(--kolor-glowny);
             text-align: center;
-            margin-bottom: 40px;
-            letter-spacing: 1.5px;
-            font-size: 1.8em;
+            /* Zmniejszony margines dla urządzeń mobilnych */
+            margin: 20px 0 30px; 
+            letter-spacing: 1px;
+            font-size: 1.6em; 
+            padding: 0 10px; /* Dodatkowy padding, by tytuł nie dotykał krawędzi */
         }
 
         /* --- Kontener Główny (Formularz) --- */
         form {
-            max-width: 600px;
-            margin: auto;
+            max-width: 600px; 
+            /* Zapewnia marginesy z boku na dużych ekranach, na małych go usunie */
+            margin: 0 auto; 
             background: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: var(--cien-delikatny);
-            border-top: 5px solid var(--kolor-akcentu); /* Świąteczny akcent na górze */
+            /* Zmniejszony padding dla małych ekranów */
+            padding: 20px; 
+            border-radius: 0; /* Usunięcie zaokrąglenia na małym ekranie wygląda lepiej */
+            box-shadow: none; /* Usunięcie cienia na małym ekranie */
+            border-top: 5px solid var(--kolor-akcentu);
+            min-height: 100vh; /* Obejmuje całą wysokość widoku na telefonie */
         }
 
         /* --- Pola Formularza --- */
@@ -59,22 +69,17 @@
         input[type="number"],
         input[type="tel"],
         select {
-            width: 100%;
-            padding: 12px;
+            width: 100%; 
+            padding: 14px; /* Zwiększony padding dla łatwiejszego klikania na dotyku */
             margin-top: 6px;
             border: 1px solid #cccccc;
             border-radius: 4px;
             box-sizing: border-box;
             transition: border-color 0.3s;
+            font-size: 16px; /* Zapewnienie, że inputy nie są powiększane na iOS */
         }
 
-        input:focus,
-        select:focus {
-            border-color: var(--kolor-akcentu);
-            outline: none;
-        }
-
-        /* Grupa RODO i Checkbox */
+        /* Grupa RODO i Checkbox - KLUCZOWA ZMIANA */
         .rodo-group {
             margin-top: 25px;
             padding-top: 15px;
@@ -88,17 +93,22 @@
         }
 
         .rodo-checkbox-container input[type="checkbox"] {
-            width: auto;
+            /* Zapewnienie stałej, małej szerokości dla checkboxa */
+            flex-shrink: 0; 
+            width: 20px;
+            height: 20px;
             margin-top: 4px;
             margin-right: 10px;
         }
         
         .rodo-text {
+            /* Umożliwienie tekstu owinięcia się wokół checkboxa */
+            flex-grow: 1;
             font-size: 0.9em;
             color: #666;
         }
 
-        /* Informacja o Administratorze (RODO) */
+        /* Info o Administratorze */
         .rodo-admin-info {
             font-size: 0.8em;
             color: #999;
@@ -106,19 +116,15 @@
             text-align: center;
         }
         
-        .rodo-admin-info strong {
-            color: var(--kolor-glowny);
-        }
-
         /* --- Przycisk Rezerwacji --- */
         button {
             margin-top: 30px;
             width: 100%;
-            padding: 14px 20px;
+            padding: 16px 20px; /* Zwiększony padding dla dotyku */
             background-color: var(--kolor-akcentu);
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 18px; /* Lekko większa czcionka */
             border-radius: 4px;
             cursor: pointer;
             letter-spacing: 1px;
@@ -137,8 +143,26 @@
         .success {
             text-align: center;
             margin-top: 20px;
-            color: var(--kolor-glowny); /* Sukces w kolorze zielonym */
+            color: var(--kolor-glowny);
             font-weight: bold;
+        }
+        
+        /* --- MEDIA QUERIES (poprawki dla większych ekranów) --- */
+        @media (min-width: 600px) {
+            body {
+                padding: 24px;
+            }
+            form {
+                /* Przywrócenie stylu desktopowego */
+                border-radius: 8px; 
+                box-shadow: var(--cien-delikatny);
+                padding: 30px;
+                margin: auto;
+                min-height: auto;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
         }
     </style>
 </head>
@@ -274,7 +298,6 @@
             const submitButton = form.querySelector('button[type="submit"]');
 
             // Weryfikuje ważność formularza HTML5 (w tym pola required)
-            // Oraz weryfikuje czy RODO jest zaznaczone
             const isFormValid = form.checkValidity() && rodoChecked;
 
             // Ustawia atrybut disabled przycisku
@@ -285,7 +308,6 @@
         document.getElementById("submitForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
-            // Dodatkowe sprawdzenie RODO na wypadek, gdyby JS w checkFormValidity nie zadziałał
             if (!document.getElementById("rodoAccept").checked) {
                 alert("Proszę zaakceptować warunki RODO, aby kontynuować rezerwację.");
                 return;
@@ -299,7 +321,6 @@
             submitButton.textContent = "Wysyłanie...";
             submitButton.disabled = true;
 
-            // Ukryj komunikat o sukcesie
             document.getElementById("successMsg").style.display = "none";
 
             fetch(scriptURL + "?" + params, { method: "GET" })
@@ -321,14 +342,12 @@
                 .finally(() => {
                     // Przywróć przycisk i sprawdź stan formularza
                     submitButton.textContent = "Wyślij Rezerwację";
-                    checkFormValidity(); // Przycisk pozostanie wyłączony, bo pola są puste po resetowaniu
+                    checkFormValidity(); 
                 });
         });
         
         // --- Inicjalizacja ---
-        // 1. Uruchomienie przy starcie, aby zainicjować pola przystanków
         updateStops();
-        // 2. Dodanie globalnych nasłuchiwań na zmiany, aby aktualizować przycisk
         const formElements = document.querySelectorAll('#submitForm input, #submitForm select');
         formElements.forEach(element => {
             if (element.id !== 'rodoAccept' && element.tagName !== 'BUTTON') {
@@ -336,7 +355,6 @@
                 element.addEventListener('input', checkFormValidity);
             }
         });
-        // 3. Sprawdzenie formularza na starcie (przycisk będzie disabled)
         checkFormValidity();
     </script>
 </body>
