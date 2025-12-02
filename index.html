@@ -6,7 +6,7 @@
     <title>Rezerwacja - Świąteczny Pociąg</title>
 
     <style>
-        /* --- Zmienne CSS --- */
+        /* --- CSS (BEZ ZMIAN) --- */
         :root {
             --kolor-tla: #f7f7f5;
             --kolor-akcentu: #8b0000;
@@ -15,7 +15,6 @@
             --cien-delikatny: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- Globalne Ustawienia i Reset --- */
         * {
             box-sizing: border-box; 
         }
@@ -28,7 +27,6 @@
             line-height: 1.6;
         }
 
-        /* --- Nagłówek i Tytuł --- */
         h2 {
             font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
             color: var(--kolor-glowny);
@@ -39,7 +37,6 @@
             padding: 0 10px;
         }
 
-        /* --- Kontener Główny (Formularz) --- */
         form {
             max-width: 600px; 
             margin: 0 auto; 
@@ -51,7 +48,6 @@
             min-height: 100vh;
         }
 
-        /* --- Pola Formularza --- */
         label {
             display: block;
             font-weight: bold;
@@ -74,7 +70,6 @@
             font-size: 16px;
         }
 
-        /* Grupa RODO i Checkbox */
         .rodo-group {
             margin-top: 25px;
             padding-top: 15px;
@@ -88,7 +83,6 @@
         }
 
         .rodo-checkbox-container input[type="checkbox"] {
-            /* KLUCZOWE STYLE DLA WIDOCZNOŚCI CHECKBOXA */
             flex-shrink: 0; 
             width: 20px;
             height: 20px;
@@ -102,7 +96,6 @@
             color: #666;
         }
 
-        /* Info o Administratorze */
         .rodo-admin-info {
             font-size: 0.8em;
             color: #999;
@@ -110,7 +103,6 @@
             text-align: center;
         }
         
-        /* --- Przycisk Rezerwacji --- */
         button {
             margin-top: 30px;
             width: 100%;
@@ -141,7 +133,6 @@
             font-weight: bold;
         }
         
-        /* --- MEDIA QUERIES (poprawki dla większych ekranów) --- */
         @media (min-width: 600px) {
             body {
                 padding: 24px;
@@ -225,16 +216,22 @@
         // ZMIEŃ NA SWÓJ URL DEPLOYMENTU
         const scriptURL = "https://script.google.com/macros/s/AKfycbwcPoLhkBTHOP7u-hnKLfL7SJX_BGsbj1-bD1MK6VJzyRs36g8-j8zrfhSqzuiboAdM/exec";
 
-        // Dane przystanków (tylko 07.12.2025)
-        const stopsData = {
-            "07.12.2025": [
-                "Besko", "Czaszyn", "Humenne", "Jasło", "Jedlicze", "Komańcza", "Komańcza Letnisko",
-                "Krosno", "Krosno Miasto", "Łupków", "Medzilaborce", "Medzilaborce Mesto",
-                "Mokre Małopolskie", "Morochów", "Nowy Łupków", "Nowy Zagórz", "Rzepedź", "Sanok",
-                "Stakcin", "Szczawne Kulaszne", "Targowiska", "Tarnawa Dolna", "Wróblik Szlachecki",
-                "Wysoczany", "Zagórz", "Zarszyn"
-            ]
-        };
+        // Dane przystanków dla stacji początkowej (pełna lista dla 07.12.2025)
+        const allStops = [
+            "Besko", "Czaszyn", "Humenne", "Jasło", "Jedlicze", "Komańcza", "Komańcza Letnisko",
+            "Krosno", "Krosno Miasto", "Łupków", "Medzilaborce", "Medzilaborce Mesto",
+            "Mokre Małopolskie", "Morochów", "Nowy Łupków", "Nowy Zagórz", "Rzepedź", "Sanok",
+            "Stakcin", "Szczawne Kulaszne", "Targowiska", "Tarnawa Dolna", "Wróblik Szlachecki",
+            "Wysoczany", "Zagórz", "Zarszyn"
+        ];
+        
+        // Dane przystanków dla stacji końcowej (ograniczona lista)
+        const destinationStops = [
+            "Medzilaborce",
+            "Medzilaborce Mesto",
+            "Stakcin",
+            "Humenne"
+        ];
 
         /**
          * Funkcja wypełniająca listy przystanków na podstawie wybranej daty.
@@ -244,28 +241,32 @@
             const stop1Select = document.getElementById("stop1");
             const stop2Select = document.getElementById("stop2");
             const selectedDate = dateSelect.value;
-            const stops = stopsData[selectedDate] || [];
 
-            // Wyczyść i wyłącz pola przystanków
+            // Używamy pełnej listy dla stop1
+            const stopsForStart = allStops;
+            // Używamy ograniczonej listy dla stop2
+            const stopsForEnd = destinationStops;
+
+            // Reset i wyłączenie pól
             stop1Select.innerHTML = '<option value="" disabled selected>Wybierz przystanek</option>';
             stop2Select.innerHTML = '<option value="" disabled selected>Wybierz przystanek</option>';
             stop1Select.disabled = true;
             stop2Select.disabled = true;
 
-            if (stops.length > 0) {
-                // Wypełnij pola przystanków nowymi opcjami
-                stops.forEach(stop => {
-                    const option1 = new Option(stop, stop);
-                    const option2 = new Option(stop, stop);
-                    stop1Select.add(option1);
-                    stop2Select.add(option2);
+            if (selectedDate === "07.12.2025") {
+                // 1. Wypełnij STACJĘ POCZĄTKOWĄ (pełna lista)
+                stopsForStart.forEach(stop => {
+                    stop1Select.add(new Option(stop, stop));
                 });
-
-                // Włącz pola przystanków
                 stop1Select.disabled = false;
+
+                // 2. Wypełnij STACJĘ KOŃCOWĄ (ograniczona lista)
+                stopsForEnd.forEach(stop => {
+                    stop2Select.add(new Option(stop, stop));
+                });
                 stop2Select.disabled = false;
             } else if (selectedDate) {
-                // Komunikat, gdy lista jest pusta
+                // Komunikat, gdy lista dla wybranej daty jest pusta (chociaż w tym kodzie to się nie wydarzy, bo jest tylko 07.12)
                 stop1Select.innerHTML = '<option value="" disabled selected>Brak przystanków dla tej daty</option>';
                 stop2Select.innerHTML = '<option value="" disabled selected>Brak przystanków dla tej daty</option>';
             }
@@ -282,10 +283,8 @@
             const rodoChecked = document.getElementById("rodoAccept").checked;
             const submitButton = form.querySelector('button[type="submit"]');
 
-            // Weryfikuje ważność formularza HTML5 (w tym pola required)
             const isFormValid = form.checkValidity() && rodoChecked;
 
-            // Ustawia atrybut disabled przycisku
             submitButton.disabled = !isFormValid;
         }
 
@@ -301,7 +300,6 @@
             const formData = new FormData(this);
             const params = new URLSearchParams(formData).toString();
 
-            // Wyłącz przycisk i zmień tekst podczas wysyłania
             const submitButton = this.querySelector('button[type="submit"]');
             submitButton.textContent = "Wysyłanie...";
             submitButton.disabled = true;
@@ -317,15 +315,14 @@
                 })
                 .then(() => {
                     document.getElementById("successMsg").style.display = "block";
-                    this.reset(); // Resetuje formularz
-                    updateStops(); // Wyczyść dynamiczne listy
-                    document.getElementById("rodoAccept").checked = false; // Resetuj checkbox RODO
+                    this.reset();
+                    updateStops();
+                    document.getElementById("rodoAccept").checked = false;
                 })
                 .catch(err => {
                     alert("Błąd podczas wysyłania danych: " + err);
                 })
                 .finally(() => {
-                    // Przywróć przycisk i sprawdź stan formularza
                     submitButton.textContent = "Wyślij Rezerwację";
                     checkFormValidity(); 
                 });
