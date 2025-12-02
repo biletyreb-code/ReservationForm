@@ -16,7 +16,6 @@
         }
 
         /* --- Globalne Ustawienia i Reset --- */
-        /* Użycie box-sizing: border-box jest kluczowe dla responsywności */
         * {
             box-sizing: border-box; 
         }
@@ -25,7 +24,6 @@
             background-color: var(--kolor-tla);
             color: var(--kolor-tekstu);
             margin: 0;
-            /* Na małych ekranach zredukuj padding, aby formularz zajął całą szerokość */
             padding: 0; 
             line-height: 1.6;
         }
@@ -35,25 +33,22 @@
             font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
             color: var(--kolor-glowny);
             text-align: center;
-            /* Zmniejszony margines dla urządzeń mobilnych */
             margin: 20px 0 30px; 
             letter-spacing: 1px;
             font-size: 1.6em; 
-            padding: 0 10px; /* Dodatkowy padding, by tytuł nie dotykał krawędzi */
+            padding: 0 10px;
         }
 
         /* --- Kontener Główny (Formularz) --- */
         form {
             max-width: 600px; 
-            /* Zapewnia marginesy z boku na dużych ekranach, na małych go usunie */
             margin: 0 auto; 
             background: #ffffff;
-            /* Zmniejszony padding dla małych ekranów */
             padding: 20px; 
-            border-radius: 0; /* Usunięcie zaokrąglenia na małym ekranie wygląda lepiej */
-            box-shadow: none; /* Usunięcie cienia na małym ekranie */
+            border-radius: 0;
+            box-shadow: none;
             border-top: 5px solid var(--kolor-akcentu);
-            min-height: 100vh; /* Obejmuje całą wysokość widoku na telefonie */
+            min-height: 100vh;
         }
 
         /* --- Pola Formularza --- */
@@ -70,16 +65,16 @@
         input[type="tel"],
         select {
             width: 100%; 
-            padding: 14px; /* Zwiększony padding dla łatwiejszego klikania na dotyku */
+            padding: 14px;
             margin-top: 6px;
             border: 1px solid #cccccc;
             border-radius: 4px;
             box-sizing: border-box;
             transition: border-color 0.3s;
-            font-size: 16px; /* Zapewnienie, że inputy nie są powiększane na iOS */
+            font-size: 16px;
         }
 
-        /* Grupa RODO i Checkbox - KLUCZOWA ZMIANA */
+        /* Grupa RODO i Checkbox */
         .rodo-group {
             margin-top: 25px;
             padding-top: 15px;
@@ -93,7 +88,7 @@
         }
 
         .rodo-checkbox-container input[type="checkbox"] {
-            /* Zapewnienie stałej, małej szerokości dla checkboxa */
+            /* KLUCZOWE STYLE DLA WIDOCZNOŚCI CHECKBOXA */
             flex-shrink: 0; 
             width: 20px;
             height: 20px;
@@ -102,7 +97,6 @@
         }
         
         .rodo-text {
-            /* Umożliwienie tekstu owinięcia się wokół checkboxa */
             flex-grow: 1;
             font-size: 0.9em;
             color: #666;
@@ -120,11 +114,11 @@
         button {
             margin-top: 30px;
             width: 100%;
-            padding: 16px 20px; /* Zwiększony padding dla dotyku */
+            padding: 16px 20px;
             background-color: var(--kolor-akcentu);
             border: none;
             color: white;
-            font-size: 18px; /* Lekko większa czcionka */
+            font-size: 18px;
             border-radius: 4px;
             cursor: pointer;
             letter-spacing: 1px;
@@ -153,7 +147,6 @@
                 padding: 24px;
             }
             form {
-                /* Przywrócenie stylu desktopowego */
                 border-radius: 8px; 
                 box-shadow: var(--cien-delikatny);
                 padding: 30px;
@@ -174,7 +167,6 @@
         <label for="date">Data Przejazdu</label>
         <select id="date" name="date" required onchange="updateStops(); checkFormValidity();">
             <option value="" disabled selected>Wybierz datę</option>
-            <option value="06.12.2025">06.12.2025</option>
             <option value="07.12.2025">07.12.2025</option>
         </select>
 
@@ -233,15 +225,8 @@
         // ZMIEŃ NA SWÓJ URL DEPLOYMENTU
         const scriptURL = "https://script.google.com/macros/s/AKfycbwcPoLhkBTHOP7u-hnKLfL7SJX_BGsbj1-bD1MK6VJzyRs36g8-j8zrfhSqzuiboAdM/exec";
 
-        // Dane przystanków (zgodne z Twoimi)
+        // Dane przystanków (tylko 07.12.2025)
         const stopsData = {
-            "06.12.2025": [
-                "Besko", "Biecz", "Długie", "Gliniczek", "Gorlice", "Gorlice Glinik", "Gorlice Zagórzany",
-                "Jasło", "Jasło Niegłowice", "Jedlicze", "Jedlicze Męcinka", "Krosno", "Krosno Miasto",
-                "Krosno Polanka", "Krosno Turaszówka", "Libusza", "Milcza", "Nowosielce", "Nowy Zagórz",
-                "Przysieki", "Sanok", "Sanok Dąbrówka", "Sanok Miasto", "Siepietnica", "Skołyszyn",
-                "Targowiska", "Tarnowiec", "Widacz", "Wróblik Szlachecki", "Zarszyn", "Zagórz"
-            ],
             "07.12.2025": [
                 "Besko", "Czaszyn", "Humenne", "Jasło", "Jedlicze", "Komańcza", "Komańcza Letnisko",
                 "Krosno", "Krosno Miasto", "Łupków", "Medzilaborce", "Medzilaborce Mesto",
